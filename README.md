@@ -1,18 +1,16 @@
 # 自动售货机（VM）终端和中心管理系统
 测试环境
-系统管理地址: http://localhost:8081/ 用户名:`admin`  密码:`1`(<del>该账户不能修改密码</del>)<br/>
-终端操作地址: http://localhost:8080/ 用户名:`tester`  密码:`1`(<del>该账户不能修改密码</del>)<br/>
+系统管理地址: http://localhost:8081/ 用户名:`admin`  密码:`1`<br/>
+终端操作地址: http://localhost:8080/ 用户名:`tester`  密码:`1`<br/>
 ## 系统更新
 * 开发中
 
 ## 主要功能
 * 系统用户,角色,权限增删改查,权限分配，权限配色<br/>
-* 文件上传可自由选择本地存储,阿里云存储
-* 系统字典<br/>
-* 配置网站基本信息，包括博客数据限制<br/>
-* 查看系统关键操作的日志(可在系统后台自动定制需要监控的模板)<br/>
-* 在线新增数据库并直接生成 前，后台基本源码，放到源码相应目录中重启tomcat可直接使用，预览<br/>
-* 系统定时任务的新增改查 立即启动 暂停 恢复<br/>
+* VM端商品查询、支付、出货<br/>
+* 备货、调试功能<br/>
+* 闲时广告播放功能<br/>
+* 后台管理控制中心<br/>
 
 ## 技术框架
 * 核心框架：`SpringBoot`
@@ -52,9 +50,8 @@
 
 # 快速体验
 * 将源码导入IDE 
-* src\main\resources目录下的application.yml配置文件里的mysql用户名密码已经配置好了
-* 安装redis数据库 默认数据库密码为空(注*** 必须安装redis 否则本系统会报错)
-* redis的window版本有些地方下载可以下不下来,可以到这里下载`https://pan.baidu.com/s/1dG22JQT`  
+* 安装redis数据库 默认数据库密码为空(注意 必须安装redis 否则本系统会报错)
+* redis的window版本有些地方下载可以下不下来,可以到这里下载`https://pan.baidu.com/s/1ZKXboYLNqec6jViI80M-7g`  
 * 注册redis系统服务 打开cmd--->切换到安装redis的目录--->`redis-server.exe --service-install redis.windows-service.conf`
 
 
