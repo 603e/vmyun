@@ -15,14 +15,14 @@ import java.util.Set;
  * @author liulingxian
  * @since 2018-08-18
  */
-@TableName("cloud_goods")
+@TableName("vm_goods")
 public class Goods extends DataEntity<Goods> {
 
     private static final long serialVersionUID = 1L;
 	/**
 	 * 商品编码
 	 */
-	private String code;
+	private String number;
     /**
      * 商品名称
      */
@@ -44,15 +44,15 @@ public class Goods extends DataEntity<Goods> {
 		this.name = name;
 	}
 
-	public String getCode() {
-		return code;
-	}
+    public String getNumber() {
+        return number;
+    }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    public void setNumber(String number) {
+        this.number = number;
+    }
 
-	public String getIcon() {
+    public String getIcon() {
 		return icon;
 	}
 
