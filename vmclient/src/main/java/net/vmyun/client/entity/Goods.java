@@ -15,7 +15,7 @@ import java.util.Set;
  * @author liulingxian
  * @since 2018-08-18
  */
-@TableName("cloud_goods")
+@TableName("vm_goods")
 public class Goods extends DataEntity<Goods> {
 
     private static final long serialVersionUID = 1L;
