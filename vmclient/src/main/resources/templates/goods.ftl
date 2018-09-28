@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="//at.alicdn.com/t/font_tnyc012u2rlwstt9.css" media="all" />
     <link rel="stylesheet" href="${base}/static/css/main.css" media="all" />
 </head>
-<body class="childrenBody" onload="guanbi()">
+<body class="childrenBody" onload="kaishi()">
 <div class="panel_box row">
     <#if (goods?size>0)>
         <#list goods as items>
@@ -133,10 +133,33 @@
                 ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
                 ,btnAlign: 'c'
                 ,moveType: 1 //拖拽模式，0或者1
-                ,content: '<h1>请登录</h1><form class="layui-form" action="${base}/login/main" method="post">        <div class="layui-form-item">            <input class="layui-input" name="username" placeholder="用户名" lay-verify="required" type="text" autocomplete="off">        </div>        <div class="layui-form-item">            <input class="layui-input" name="password" placeholder="密码" lay-verify="required" type="password" autocomplete="off">        </div>        <button class="layui-btn login_btn" lay-submit="" lay-filter="login">登录</button>    </form>'
+                ,content: '<form class="layui-form" action="${base}/login/main" method="post">    <div class="layui-form-item">        <input class="layui-input" name="username" placeholder="用户名" lay-verify="required" type="text" autocomplete="off">    </div>    <div class="layui-form-item">        <input class="layui-input" name="password" placeholder="密码" lay-verify="required" type="password" autocomplete="off">    </div>    <button class="layui-btn login_btn" lay-submit="" lay-filter="login">登录</button></form><script type="text/javascript" src="${base}/static/layui/layui.js">'
 
             });
-        }
+            layui.use(['layer', 'form'], function() {
+                var layer = layui.layer,
+                        $ = layui.jquery,
+                        form = layui.form;
+
+                form.on('submit(login)', function(data) {
+                    var loadIndex = layer.load(2, {
+                        shade: [0.3, '#333']
+                    });
+                    $.post(data.form.action, data.field, function(res) {
+                        layer.close(loadIndex);
+                        if(res.success){
+                            location.href="${base}/"+res.data.url;
+                        }else{
+                            layer.msg(res.message);
+                            $("#mycode").click();
+                        }
+                    });
+                    return false;
+
+                });
+
+            });
+    }
 </script>
 </body>
 </html>
