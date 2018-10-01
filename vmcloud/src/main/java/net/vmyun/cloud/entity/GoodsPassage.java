@@ -34,8 +34,8 @@ public class GoodsPassage extends DataEntity<GoodsPassage> {
 	private String vmColumn;
 	@TableField("goods_id")
 	private String goodsId;
-	@TableField("amount")
-	private String amount;
+	@TableField("qty")
+	private String qty;
 	@TableField("create_date")
 	private String createDate;
 	@TableField("create_by")
@@ -48,8 +48,8 @@ public class GoodsPassage extends DataEntity<GoodsPassage> {
 	private String remarks;
 	@TableField("del_flag")
 	private String del_flag;
-	@TableField("unit_price")
-	private String unitPrice;
+	@TableField("price")
+	private String price;
 	public static long getSerialVersionUID() {
 		return serialVersionUID;
 	}
@@ -80,14 +80,13 @@ public class GoodsPassage extends DataEntity<GoodsPassage> {
 		this.number = number;
 	}
 
-	public String getAmount() {
-		return amount;
+	public String getQty() {
+		return qty;
 	}
 
-	public void setAmount(String amount) {
-		this.amount = amount;
+	public void setQty(String qty) {
+		this.qty = qty;
 	}
-
 
 	public String getRemarks() {
 		return remarks;
@@ -142,12 +141,12 @@ public class GoodsPassage extends DataEntity<GoodsPassage> {
 		this.updateBy = updateBy;
 	}
 
-	public String getUnitPrice() {
-		return unitPrice;
+	public String getPrice() {
+		return price;
 	}
 
-	public void setUnitPrice(String unitPrice) {
-		this.unitPrice = unitPrice;
+	public void setPrice(String price) {
+		this.price = price;
 	}
 
 	@Override
