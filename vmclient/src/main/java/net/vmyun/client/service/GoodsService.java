@@ -13,5 +13,5 @@ import net.vmyun.client.entity.Group;
  * @since 2018-08-18
  */
 public interface GoodsService extends IService<Goods> {
-	
+
 }
