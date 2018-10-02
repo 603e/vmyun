@@ -13,6 +13,7 @@ import net.vmyun.client.service.GoodsPassageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 
@@ -73,12 +74,12 @@ public class GoodsPassageServiceImpl extends ServiceImpl<GoodsPassageDao, GoodsP
         goodsPassage.setGoodsId((String)goodsPassageJson.get("goodsId"));
         goodsPassage.setCreateId(Long.valueOf(3));
         goodsPassage.setDelFlag(false);
-        goodsPassage.setPrice((String)goodsPassageJson.get("price"));
-        goodsPassage.setQty((String)goodsPassageJson.get("qty"));
+        goodsPassage.setPrice((BigDecimal) goodsPassageJson.get("price"));
+        goodsPassage.setQty((int)goodsPassageJson.get("qty"));
         goodsPassage.setRemarks((String)goodsPassageJson.get("remarks"));
         goodsPassage.setUpdateId(Long.valueOf(3));
-        goodsPassage.setVmColumn((String)goodsPassageJson.get("vmColumn"));
-        goodsPassage.setVmRow((String)goodsPassageJson.get("vmRow"));
+        goodsPassage.setVmColumn((int)goodsPassageJson.get("vmColumn"));
+        goodsPassage.setVmRow((int)goodsPassageJson.get("vmRow"));
         return goodsPassage;
     }
 }

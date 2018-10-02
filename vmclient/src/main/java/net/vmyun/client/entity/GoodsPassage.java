@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableName;
 import net.vmyun.base.DataEntity;
 
+import java.math.BigDecimal;
+
 /**
  * <p>
  * 
@@ -27,19 +29,21 @@ public class GoodsPassage extends DataEntity<GoodsPassage> {
 	private String number;
 
 	@TableField("vm_row")
-	private String vmRow;
+	private int vmRow;
 	@TableField("vm_column")
-	private String vmColumn;
+	private int vmColumn;
 	@TableField("goods_id")
 	private String goodsId;
 	@TableField("qty")
-	private String qty;
+	private int qty;
 	@TableField("create_date")
 	private String createDate;
 	@TableField("remarks")
 	private String remarks;
 	@TableField("price")
-	private String price;
+	private BigDecimal price;
+	//是否需要加热，这个值是从订单明细中来，不需要保存到数据库
+	private boolean heatFlag;
 	public static long getSerialVersionUID() {
 		return serialVersionUID;
 	}
@@ -70,11 +74,11 @@ public class GoodsPassage extends DataEntity<GoodsPassage> {
 		this.number = number;
 	}
 
-	public String getQty() {
+	public int getQty() {
 		return qty;
 	}
 
-	public void setQty(String qty) {
+	public void setQty(int qty) {
 		this.qty = qty;
 	}
 
@@ -82,19 +86,19 @@ public class GoodsPassage extends DataEntity<GoodsPassage> {
 		return remarks;
 	}
 
-	public String getVmRow() {
+	public int getVmRow() {
 		return vmRow;
 	}
 
-	public void setVmRow(String vmRow) {
+	public void setVmRow(int vmRow) {
 		this.vmRow = vmRow;
 	}
 
-	public String getVmColumn() {
+	public int getVmColumn() {
 		return vmColumn;
 	}
 
-	public void setVmColumn(String vmColumn) {
+	public void setVmColumn(int vmColumn) {
 		this.vmColumn = vmColumn;
 	}
 
@@ -107,11 +111,11 @@ public class GoodsPassage extends DataEntity<GoodsPassage> {
 	}
 
 
-	public String getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(String price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 
@@ -120,7 +124,11 @@ public class GoodsPassage extends DataEntity<GoodsPassage> {
 		this.remarks = remarks;
 	}
 
+	public boolean getHeatFlag() {
+		return heatFlag;
+	}
 
-
-
+	public void setHeatFlag(boolean heatFlag) {
+		this.heatFlag = heatFlag;
+	}
 }
