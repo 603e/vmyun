@@ -20,5 +20,5 @@ import java.util.List;
 public interface GoodsPassageService extends IService<GoodsPassage> {
     Goods findGoodsByid(Long id);
     List<Goods> selectGoodsList();
-    Boolean addGoodsPassage(JSONObject josnObject);
+    Boolean addGoodsPassage(JSONObject josnObject,int vmId);
 }

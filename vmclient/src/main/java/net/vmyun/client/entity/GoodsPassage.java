@@ -36,8 +36,6 @@ public class GoodsPassage extends DataEntity<GoodsPassage> {
 	private String qty;
 	@TableField("create_date")
 	private String createDate;
-	@TableField("update_date")
-	private String updateDate;
 	@TableField("remarks")
 	private String remarks;
 	@TableField("price")
@@ -108,9 +106,6 @@ public class GoodsPassage extends DataEntity<GoodsPassage> {
 		this.goodsId = goodsId;
 	}
 
-	public void setUpdateDate(String updateDate) {
-		this.updateDate = updateDate;
-	}
 
 	public String getPrice() {
 		return price;

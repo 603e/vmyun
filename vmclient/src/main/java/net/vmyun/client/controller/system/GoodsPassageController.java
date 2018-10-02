@@ -5,11 +5,13 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
 import net.vmyun.annotation.SysLog;
 import net.vmyun.client.base.BaseController;
+import net.vmyun.client.config.VmclientConfig;
 import net.vmyun.client.entity.Goods;
 import net.vmyun.client.entity.GoodsPassage;
 import net.vmyun.client.service.GoodsPassageService;
 
 import net.vmyun.util.LayerData;
+import net.vmyun.util.ResultMsg;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.slf4j.Logger;
@@ -33,7 +35,8 @@ public class GoodsPassageController extends BaseController {
     private static final Logger LOGGER = LoggerFactory.getLogger(GoodsPassageController.class);
     @Autowired
     protected GoodsPassageService goodsPassageService;
-
+    @Autowired
+    protected VmclientConfig vmclientConfig;
 
     @GetMapping("list")
     @SysLog("跳转商品管理页")
@@ -49,7 +52,9 @@ public class GoodsPassageController extends BaseController {
                                         ServletRequest request){
         LayerData<GoodsPassage> GoodsLayerData = new LayerData<>();
         EntityWrapper<GoodsPassage> GoodsEntityWrapper = new EntityWrapper<>();
-        GoodsEntityWrapper.eq("vm_id",1);
+        Integer id = vmclientConfig.getId();
+        GoodsEntityWrapper.eq("vm_id",id);
+        GoodsEntityWrapper.eq("del_flag",0);
         Page<GoodsPassage> goodsPassagePage = goodsPassageService.selectPage(new Page<>(page,limit),GoodsEntityWrapper);
         GoodsLayerData.setCount(goodsPassagePage.getTotal());
         GoodsLayerData.setData(setGoods(goodsPassagePage.getRecords()));
@@ -76,10 +81,14 @@ public class GoodsPassageController extends BaseController {
 
     @PostMapping("addGoodsPassage")
     @ResponseBody
-    public String addGoodsPassage( @RequestParam Map<String,Object> reqMap){
+    public ResultMsg addGoodsPassage( @RequestParam Map<String,Object> reqMap){
         JSONObject josnObject=(JSONObject)JSONObject.toJSON(reqMap);
-        Boolean b=goodsPassageService.addGoodsPassage(josnObject);
-      return "";
+        Boolean b=goodsPassageService.addGoodsPassage(josnObject,vmclientConfig.getId());
+        ResultMsg resultMsg=null;
+        if (b){
+            resultMsg=new ResultMsg("000000","保存更新成功");
+        }
+      return resultMsg;
     }
 
 }

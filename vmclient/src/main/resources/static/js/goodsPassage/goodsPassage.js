@@ -34,6 +34,9 @@ $(document).ready(function(){
 	            	id:'dd',
 	                title: "商品",
 	                field: "goods",
+                    formatter:function(value,row){
+                        return row.goods;
+                    },
 	                editor: {
 	                    type: 'combobox',
 	                    options: {
@@ -43,7 +46,7 @@ $(document).ready(function(){
                             editable: false
 						}
 	                }
-	            },
+                },
 				{
 					title: "价格",
 					field: "price",
@@ -73,7 +76,13 @@ $(document).ready(function(){
 	    singleSelect: true,
 	    rowStyler: function(index, row) {
 	        return 'background-color:#FFFFFF';
-	    },
+	    },onEndEdit: function(rowIndex, rowData){
+            var ed = $('#myTable').datagrid('getEditor', { index: rowIndex, field: 'goods' });
+            if (ed != null) {
+                var goods = $(ed.target).combobox('getText');
+                $('#myTable').datagrid('getRows')[rowIndex]['goods'] = goods;
+            }
+        },
 	    toolbar: [{
 	            text: '添加数据',
 	            iconCls: 'icon-add',
@@ -116,18 +125,37 @@ $(document).ready(function(){
                 handler: function () {
                     var rows = $("#myTable").datagrid("getRows");
                     for(var i=0;i<rows.length;i++){
-                        $("#myTable").datagrid('endEdit',i);
+                        // $("#myTable").datagrid('endEdit',i);
+                        var ed = $('#myTable').datagrid('getEditor', { index: i, field: 'goods' });  //editIndex编辑时记录下的行号
+                        if (ed != null) {
+                            var goods = $(ed.target).combobox('getText');
+                            var goodsId = $(ed.target).combobox('getValue');
+                            $('#myTable').datagrid('getRows')[i]['goodsId'] = goodsId;
+                            $('#myTable').datagrid('getRows')[i]['goods'] = goods;
+                        }
+                        $('#myTable').datagrid('endEdit', i);
 					}
                     var rows = $("#myTable").datagrid("getRows");
                     var data={};
                     rows=JSON.stringify(rows);
                     data.rows=rows;
+                    showLoading({loadMsg:'处理中，请稍后。。。。。'})
                     $.ajax({
                         type:"POST",
 						data:data,
                         url :'http://'+base+'/admin/goods/addGoodsPassage',
-                        success:function(data){
-                        	debugger;
+                        success:function(resultMsg){
+                        	if(resultMsg.retCode){
+                                $("#myTable").datagrid('reload');
+                        		hideLoading();
+                                $.messager.alert('提示信息','保存成功');
+                                $("#myTable").datagrid('reload');
+							}else{
+                                $("#myTable").datagrid('reload');
+                                hideLoading();
+                                $.messager.alert('提示信息','保存失败');
+
+							}
                         }
                     });
                 }
@@ -145,8 +173,8 @@ $(document).ready(function(){
                 }
             }]
 	});
-});
 
+});
 
 function queryGoods() {
     var base=window.location.host;

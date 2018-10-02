@@ -13,6 +13,7 @@ import net.vmyun.client.service.GoodsPassageService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 
 
@@ -40,21 +41,29 @@ public class GoodsPassageServiceImpl extends ServiceImpl<GoodsPassageDao, GoodsP
     }
 
     @Override
-    public Boolean addGoodsPassage(JSONObject josnObject) {
+    public Boolean addGoodsPassage(JSONObject josnObject, int vmId) {
         JSONArray jsonArray=JSONArray.parseArray((String) josnObject.get("rows"));
-        int count;
+        int count=0;
         for (int i=0;i<jsonArray.size();i++){
             JSONObject goodsPassageJson=(JSONObject)jsonArray.get(i);
             GoodsPassage  goodsPassage=setValue(goodsPassageJson);
             if (goodsPassageJson.get("id")!=null && !goodsPassageJson.get("id").equals("")){
                 EntityWrapper<GoodsPassage> GoodsEntityWrapper = new EntityWrapper<>();
                 GoodsEntityWrapper.eq("id",goodsPassageJson.get("id"));
+                goodsPassage.setVmId((String)goodsPassageJson.get("vmId"));
+                goodsPassage.setUpdateDate(new Date());
                 count=baseMapper.update(goodsPassage,GoodsEntityWrapper);
             }else{
+                goodsPassage.setVmId(String.valueOf(vmId));
+                goodsPassage.setCreateDate(new Date());
                 count=baseMapper.insertAllColumn(goodsPassage);
             }
         }
-        return true;
+        if(count>0){
+            return true;
+        }else{
+            return false;
+        }
     }
 
 
@@ -69,7 +78,6 @@ public class GoodsPassageServiceImpl extends ServiceImpl<GoodsPassageDao, GoodsP
         goodsPassage.setRemarks((String)goodsPassageJson.get("remarks"));
         goodsPassage.setUpdateId(Long.valueOf(3));
         goodsPassage.setVmColumn((String)goodsPassageJson.get("vmColumn"));
-        goodsPassage.setVmId((String)goodsPassageJson.get("vmId"));
         goodsPassage.setVmRow((String)goodsPassageJson.get("vmRow"));
         return goodsPassage;
     }
