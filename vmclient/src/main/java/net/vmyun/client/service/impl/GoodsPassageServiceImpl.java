@@ -67,14 +67,13 @@ public class GoodsPassageServiceImpl extends ServiceImpl<GoodsPassageDao, GoodsP
         }
     }
 
-
-    public GoodsPassage setValue(JSONObject goodsPassageJson){
+    public static  GoodsPassage setValue(JSONObject goodsPassageJson){
         GoodsPassage goodsPassage=new GoodsPassage();
         goodsPassage.setNumber((String)goodsPassageJson.get("number"));
         goodsPassage.setGoodsId((String)goodsPassageJson.get("goodsId"));
         goodsPassage.setCreateId(Long.valueOf(3));
         goodsPassage.setDelFlag(false);
-        goodsPassage.setPrice((BigDecimal) goodsPassageJson.get("price"));
+        goodsPassage.setPrice( new BigDecimal(String.valueOf(goodsPassageJson.get("price"))));
         goodsPassage.setQty((int)goodsPassageJson.get("qty"));
         goodsPassage.setRemarks((String)goodsPassageJson.get("remarks"));
         goodsPassage.setUpdateId(Long.valueOf(3));

@@ -43,6 +43,7 @@ public class GoodsPassage extends DataEntity<GoodsPassage> {
 	@TableField("price")
 	private BigDecimal price;
 	//是否需要加热，这个值是从订单明细中来，不需要保存到数据库
+	@TableField(exist = false)
 	private boolean heatFlag;
 	public static long getSerialVersionUID() {
 		return serialVersionUID;

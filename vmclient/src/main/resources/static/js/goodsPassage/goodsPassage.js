@@ -1,7 +1,7 @@
+var rowNumber = 0;
 $(document).ready(function(){
     load();
     queryGoods();
-	var rowNumber = 0;
     var base=window.location.host;
 	$("#myTable").datagrid({
 	    columns: [[
@@ -67,8 +67,7 @@ $(document).ready(function(){
 					title: "操作",
 					field: "amount",
 					formatter:function(value, row, index){
-                        var str = '<a href="#" rel="external nofollow" name="opera" class="easyui-linkbutton" >操作</a>';
-                        return str;
+                        return "<input type='button' name=\"opera\" value='操作' onClick=\"editRow('" + row + "','" + index + "')\" >";
                     }
 				}
 	              ]],
@@ -91,7 +90,7 @@ $(document).ready(function(){
 	                    index: rowNumber,
 	                    row: {}
 	                });
-	                $("#myTable").datagrid("beginEdit", 0);
+	                $("#myTable").datagrid("beginEdit", rowNumber);
                     rowNumber+1;
 	            }
 	         },
@@ -139,7 +138,6 @@ $(document).ready(function(){
                     var data={};
                     rows=JSON.stringify(rows);
                     data.rows=rows;
-                    showLoading({loadMsg:'处理中，请稍后。。。。。'})
                     $.ajax({
                         type:"POST",
 						data:data,
@@ -147,12 +145,10 @@ $(document).ready(function(){
                         success:function(resultMsg){
                         	if(resultMsg.retCode){
                                 $("#myTable").datagrid('reload');
-                        		hideLoading();
                                 $.messager.alert('提示信息','保存成功');
                                 $("#myTable").datagrid('reload');
 							}else{
                                 $("#myTable").datagrid('reload');
-                                hideLoading();
                                 $.messager.alert('提示信息','保存失败');
 
 							}
@@ -165,8 +161,20 @@ $(document).ready(function(){
                 iconCls: 'icon-save',
                 handler: function () {
                     var rows = $("#myTable").datagrid("getRows");
-                    getAjax('../customerController/deletCredit', rows[rowNumber], '', function(result, status) {
-                        if(result.errorCode == '0000'){
+                    var data={};
+                    rows=JSON.stringify(rows);
+                    data.rows=rows;
+                    $.ajax({
+                        type:"POST",
+                        data:data,
+                        url :'http://'+base+'/admin/goods/serialOperation',
+                        success:function(result){
+                            if(result.retCode=="000000"){
+                                $.messager.alert('提示信息','出货成功');
+                            }else{
+                                $.messager.alert('提示信息','出货失败');
+
+                            }
                         }
                     });
                     $("#myTable").datagrid('deleteRow',rowNumber);
@@ -197,10 +205,32 @@ function load(){
             for(i=0;i<result.length;i++){
                 var data=result[i];
                 data.goods=data.goods.name;
+                rowNumber=rowNumber+1;
                 $("#myTable").datagrid("insertRow", {
                     index: i,
                     row: data
                 });
+            }
+        }
+    });
+}
+
+function editRow(row,index) {
+    var base=window.location.host;
+    var rows = $('#myTable').datagrid('getData').rows[index];
+    var data={};
+    rows=JSON.stringify(rows);
+    data.rows=rows;
+    $.ajax({
+        type:"POST",
+        url :'http://'+base+'/admin/goods/serialOperation',
+        data:data,
+        success:function(result){
+            if(result.retCode=="000000"){
+                $.messager.alert('提示信息','出货成功');
+            }else{
+                $.messager.alert('提示信息','出货失败');
+
             }
         }
     });
