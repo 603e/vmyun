@@ -74,11 +74,11 @@ public class GoodsPassageServiceImpl extends ServiceImpl<GoodsPassageDao, GoodsP
         goodsPassage.setCreateId(Long.valueOf(3));
         goodsPassage.setDelFlag(false);
         goodsPassage.setPrice( new BigDecimal(String.valueOf(goodsPassageJson.get("price"))));
-        goodsPassage.setQty((int)goodsPassageJson.get("qty"));
+        goodsPassage.setQty(Integer.parseInt( goodsPassageJson.getString("qty")));
         goodsPassage.setRemarks((String)goodsPassageJson.get("remarks"));
         goodsPassage.setUpdateId(Long.valueOf(3));
-        goodsPassage.setVmColumn((int)goodsPassageJson.get("vmColumn"));
-        goodsPassage.setVmRow((int)goodsPassageJson.get("vmRow"));
+        goodsPassage.setVmColumn(Integer.parseInt(goodsPassageJson.getString("vmColumn")));
+        goodsPassage.setVmRow(Integer.parseInt(goodsPassageJson.getString("vmRow")));
         return goodsPassage;
     }
 }

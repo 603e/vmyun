@@ -129,7 +129,10 @@ $(document).ready(function(){
                         if (ed != null) {
                             var goods = $(ed.target).combobox('getText');
                             var goodsId = $(ed.target).combobox('getValue');
-                            $('#myTable').datagrid('getRows')[i]['goodsId'] = goodsId;
+                            // $('#myTable').datagrid('getRows')[i]['goodsId'] = goodsId;
+                            if(goods!=goodsId){
+                                rows[i].goodsId=goodsId;
+                            }
                             $('#myTable').datagrid('getRows')[i]['goods'] = goods;
                         }
                         $('#myTable').datagrid('endEdit', i);
