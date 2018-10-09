@@ -30,6 +30,7 @@
 <BODY style="background: #FFFFFF">
 <div class="table-a">
     <input type="hidden" name="base" value="${base}">
+    <input type="hidden" id="user" value="${user}">
     <table class="myTable" id="myTable"  ></table>
 </div>
 

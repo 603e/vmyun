@@ -160,6 +160,7 @@ $(document).ready(function(){
                 }
             },
             {
+                id:"operation",
                 text: '全部操作',
                 iconCls: 'icon-save',
                 handler: function () {
@@ -180,13 +181,23 @@ $(document).ready(function(){
                             }
                         }
                     });
-                    $("#myTable").datagrid('deleteRow',rowNumber);
+
                 }
             }]
 	});
-
+    buttonHandle();
 });
-
+function buttonHandle() {
+    var  user=$("#user").val();
+    if(user=="admin"){
+        $('#operation').show();
+        $('#myTable').datagrid('showColumn', 'amount');
+    }else if(user=="tester"){
+        $('#operation').hide();
+        $('#myTable').datagrid('hideColumn', 'amount');
+    }
+    // $('#myTable').datagrid('showColumn', 'amount');
+}
 function queryGoods() {
     var base=window.location.host;
     $.ajax({

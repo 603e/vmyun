@@ -16,7 +16,11 @@ import net.vmyun.client.slaver.service.SerialService;
 import net.vmyun.util.LayerData;
 import net.vmyun.util.ResultMsg;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +29,8 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -47,20 +53,25 @@ public class GoodsPassageController extends BaseController {
     @GetMapping("list")
     @SysLog("跳转商品管理页")
     public String list(ModelMap map){
+        Subject user = SecurityUtils.getSubject();
+        Object o=user.getPrincipal();
+        JSONObject josnObject=(JSONObject)JSONObject.toJSON(o);
+        String loginName= (String) josnObject.get("loginName");
+        map.put("user",loginName);
         return "admin/goods/goodsPassage";
     }
 
-    @RequiresPermissions("sys:role:list")
+//    @RequiresPermissions("sys:role:list")
     @PostMapping("list")
     @ResponseBody
     public LayerData<GoodsPassage> list(@RequestParam(value = "page",defaultValue = "1")Integer page,
-                                        @RequestParam(value = "limit",defaultValue = "10")Integer limit,
-                                        ServletRequest request){
+                                        @RequestParam(value = "limit",defaultValue = "10")Integer limit){
         LayerData<GoodsPassage> GoodsLayerData = new LayerData<>();
         EntityWrapper<GoodsPassage> GoodsEntityWrapper = new EntityWrapper<>();
         Integer id = vmclientConfig.getId();
         GoodsEntityWrapper.eq("vm_id",id);
         GoodsEntityWrapper.eq("del_flag",0);
+        GoodsEntityWrapper.orderBy("number");
         Page<GoodsPassage> goodsPassagePage = goodsPassageService.selectPage(new Page<>(page,limit),GoodsEntityWrapper);
         GoodsLayerData.setCount(goodsPassagePage.getTotal());
         GoodsLayerData.setData(setGoods(goodsPassagePage.getRecords()));
