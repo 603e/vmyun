@@ -140,6 +140,8 @@ public class GoodsPassageController extends BaseController {
             goodsPassage  =GoodsPassageServiceImpl.setValue(jsonStr);
             if(type!=null&&type.equals("1")){
                 goodsPassage.setHeatFlag(true);
+            }else if(type!=null&&type.equals("2")){
+                goodsPassage.setHeatFlag(false);
             }
             goodsPassage.setVmId((String)josnObject.get("vmId"));
             list.add(goodsPassage);

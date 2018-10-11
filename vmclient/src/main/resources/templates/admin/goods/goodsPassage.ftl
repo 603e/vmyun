@@ -27,10 +27,12 @@
         width:13%!important;
     }
 </style>
-<BODY style="background: #FFFFFF">
+<BODY style="background: #FFFFFF" onload="aaa()">
 <div class="table-a">
     <input type="hidden" name="base" value="${base}">
     <input type="hidden" id="user" value="${user}">
+    <#--<input id="sbutton" style="width:70px;height:25px">
+    <label class="lblname" id="authenTypeL"></label>-->
     <table class="myTable" id="myTable"  ></table>
 </div>
 

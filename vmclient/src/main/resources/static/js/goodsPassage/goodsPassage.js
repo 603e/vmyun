@@ -3,7 +3,7 @@ $(document).ready(function(){
     load();
     queryGoods();
     var base=window.location.host;
-	$("#myTable").datagrid({
+    $("#myTable").datagrid({
 	    columns: [[
                 {field:'id',hidden:'true'},
 	            {
@@ -67,7 +67,7 @@ $(document).ready(function(){
                     title: "加热",
                     field: "heating",
                     formatter:function(value, row, index){
-                        return "<input type='button' name=\"heating\" value='加热' onClick=\"heating('" + row + "','" + index + "')\" >";
+                        return "<input id=\"sbutton\" class=\"sbutton\" value='"+index+"' onText='开' offText='关'  style=\"width:70px;height:25px\" >";
                     }
                 },
 				{
@@ -106,11 +106,11 @@ $(document).ready(function(){
 	            iconCls: 'icon-edit',
 	            handler: function () {
 	                var hasSelect = $("#myTable").datagrid("getSelections");
-	                if (hasSelect.length == 1) {
-	                    var row = hasSelect[0];
-	                    rowNumber = $("#myTable").datagrid("getRowIndex", row);
-	                    $("#myTable").datagrid("beginEdit", rowNumber);
-	                }
+                    if (hasSelect.length == 1) {
+                        var row = hasSelect[0];
+                        rowNumber = $("#myTable").datagrid("getRowIndex", row);
+                        $("#myTable").datagrid("beginEdit", rowNumber);
+                    }
 	            }
 	         },
 	         {
@@ -192,19 +192,45 @@ $(document).ready(function(){
                 }
             }]
 	});
-    buttonHandle();
+    // buttonHandle();
 });
-function buttonHandle() {
-    var  user=$("#user").val();
-    if(user=="admin"){
-        $('#operation').show();
-        $('#myTable').datagrid('showColumn', 'amount');
-    }else if(user=="tester"){
-        $('#operation').hide();
-        $('#myTable').datagrid('hideColumn', 'amount');
-    }
-    // $('#myTable').datagrid('showColumn', 'amount');
+function aaa(){
+    $('.sbutton').switchbutton({
+        checked: false,
+        onChange: function(checked){
+            if (checked == true){
+                // document.getElementById('authenTypeL').innerHTML = '已加热!';
+                // var hasSelect = $("#myTable").datagrid("getSelections");
+                // var row = $('#myTable').datagrid('getSelected');
+                if (hasSelect.length == 1) {
+                    var row = hasSelect[0];
+                    rowNumber = $("#myTable").datagrid("getRowIndex", row);
+                    heating(rowNumber,"1");
+                }
+                return;
+            }
+            if (checked == false){
+                // document.getElementById('authenTypeL').innerHTML = '未加热!';
+                var hasSelect = $("#myTable").datagrid("getSelections");
+                if (hasSelect.length == 1) {
+                    var row = hasSelect[0];
+                    rowNumber = $("#myTable").datagrid("getRowIndex", row);
+                    heating(rowNumber,"2");
+                }
+            }}
+    })
 }
+// function buttonHandle() {
+//     var  user=$("#user").val();
+//     if(user=="admin"){
+//         $('#operation').show();
+//         $('#myTable').datagrid('showColumn', 'amount');
+//     }else if(user=="tester"){
+//         $('#operation').hide();
+//         $('#myTable').datagrid('hideColumn', 'amount');
+//     }
+//     // $('#myTable').datagrid('showColumn', 'amount');
+// }
 function queryGoods() {
     var base=window.location.host;
     $.ajax({
@@ -231,12 +257,15 @@ function load(){
                     index: i,
                     row: data
                 });
+                aaa();
             }
         }
     });
 }
 
 function editRow(row,index) {
+    var row = $('#myTable').datagrid('getSelected');
+    debugger;
     var base=window.location.host;
     var rows = $('#myTable').datagrid('getData').rows[index];
     var data={};
@@ -256,13 +285,13 @@ function editRow(row,index) {
         }
     });
 }
-function heating(row,index) {
+function heating(index,type) {
     var base=window.location.host;
     var rows = $('#myTable').datagrid('getData').rows[index];
     var data={};
     rows=JSON.stringify(rows);
     data.rows=rows;
-    data.type="1";//加热
+    data.type=type;//加热
     $.ajax({
         type:"POST",
         url :'http://'+base+'/admin/goods/serialOperation',
