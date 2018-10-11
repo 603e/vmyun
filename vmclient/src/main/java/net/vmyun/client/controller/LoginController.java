@@ -48,9 +48,9 @@ public class LoginController extends BaseController {
 			return "redirect:index";
 		}else {
 			//牛星用这个返回
-//			return "redirect:goods/test";
+			return "redirect:goods/list";
 			//王海用下面这一行，并注释上面那一行
-			return "login";
+			//return "login";
 		}
 	}
 

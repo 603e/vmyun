@@ -1,8 +1,10 @@
 package net.vmyun.client.slaver.service.impl;
 
+import net.vmyun.client.config.VmclientConfig;
 import net.vmyun.client.entity.GoodsPassage;
 import net.vmyun.client.slaver.port.SerialPort;
 import net.vmyun.client.slaver.service.SerialService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +27,8 @@ import java.util.List;
 @Service
 @Transactional(readOnly = true, rollbackFor = Exception.class)
 public class SerialServiceImpl implements SerialService {
+    @Autowired
+    protected VmclientConfig vmclientConfig;
     @Override
     public String deliverGoodsCmd(List<GoodsPassage> goodsPassages) {
 
@@ -43,7 +47,7 @@ public class SerialServiceImpl implements SerialService {
             command.append(" EE");
             SerialPort goodPort = new SerialPort(false);
             String feelback = null;
-            if(goodPort.open("COM1")){
+            if(goodPort.open(vmclientConfig.getGoodsCom())){
                 feelback = goodPort.getFeedbackAfterSendMessage(command.toString());
             }
             if("FE  DD  C2  04  EE".equals(feelback)){
