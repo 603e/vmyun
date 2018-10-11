@@ -61,6 +61,17 @@ public class GoodsPassageController extends BaseController {
         return "admin/goods/goodsPassage";
     }
 
+    @GetMapping("goodsPassageForTesters")
+    @SysLog("跳转商品管理页")
+    public String goodsPassageForTesters(ModelMap map){
+        Subject user = SecurityUtils.getSubject();
+        Object o=user.getPrincipal();
+        JSONObject josnObject=(JSONObject)JSONObject.toJSON(o);
+        String loginName= (String) josnObject.get("loginName");
+        map.put("user",loginName);
+        return "admin/goodsForTester/goodsPassage";
+    }
+
 //    @RequiresPermissions("sys:role:list")
     @PostMapping("list")
     @ResponseBody
@@ -113,6 +124,7 @@ public class GoodsPassageController extends BaseController {
         JSONObject josnObject=(JSONObject)JSONObject.toJSON(reqMap);
         List<GoodsPassage>  list=new ArrayList<>();
         boolean isToArray=isJsonArray((String) josnObject.get("rows"));
+        String type=(String) josnObject.get("type");
         GoodsPassage goodsPassage=null;
         if(isToArray){
             JSONArray jsonArray=JSONArray.parseArray((String) josnObject.get("rows"));
@@ -126,6 +138,9 @@ public class GoodsPassageController extends BaseController {
             String  a=(String)josnObject.get("rows");
             JSONObject jsonStr = JSONObject.parseObject(a);
             goodsPassage  =GoodsPassageServiceImpl.setValue(jsonStr);
+            if(type!=null&&type.equals("1")){
+                goodsPassage.setHeatFlag(true);
+            }
             goodsPassage.setVmId((String)josnObject.get("vmId"));
             list.add(goodsPassage);
         }

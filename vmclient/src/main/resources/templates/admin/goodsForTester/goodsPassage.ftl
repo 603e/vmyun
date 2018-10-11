@@ -14,7 +14,7 @@
     <script type="text/javascript" src="${base}/static/easyui/locale/easyui-lang-zh_CN.js"></script>
     <script type="text/javascript" src="${base}/static/easyui/jquery-submit.js"></script>
     <script type="text/javascript" src="${base}/static/easyui/jquery.json-2.3.js"></script>
-    <script type="text/javascript" src="${base}/static/js/goodsPassage/goodsPassage.js"></script>
+    <script type="text/javascript" src="${base}/static/js/goodsPassageForTesters/goodsPassage.js"></script>
 </HEAD>
 <style type="text/css">
     .table-a div{

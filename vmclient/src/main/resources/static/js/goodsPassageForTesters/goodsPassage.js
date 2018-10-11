@@ -192,19 +192,21 @@ $(document).ready(function(){
                 }
             }]
 	});
-    buttonHandle();
+    $('#operation').hide();
+    $('#myTable').datagrid('hideColumn', 'amount');
+    $('#myTable').datagrid('hideColumn', 'heating');
 });
-function buttonHandle() {
-    var  user=$("#user").val();
-    if(user=="admin"){
-        $('#operation').show();
-        $('#myTable').datagrid('showColumn', 'amount');
-    }else if(user=="tester"){
-        $('#operation').hide();
-        $('#myTable').datagrid('hideColumn', 'amount');
-    }
-    // $('#myTable').datagrid('showColumn', 'amount');
-}
+// function buttonHandle() {
+//     var  user=$("#user").val();
+//     if(user=="admin"){
+//         $('#operation').show();
+//         $('#myTable').datagrid('showColumn', 'amount');
+//     }else if(user=="tester"){
+//         $('#operation').hide();
+//         $('#myTable').datagrid('hideColumn', 'amount');
+//     }
+//     // $('#myTable').datagrid('showColumn', 'amount');
+// }
 function queryGoods() {
     var base=window.location.host;
     $.ajax({
