@@ -4,7 +4,13 @@ $(document).ready(function(){
     queryGoods();
     var base=window.location.host;
     $("#myTable").datagrid({
-	    columns: [[
+        onClickRow: function (index, row) {
+
+        },
+        onSelect:function (index, row) {
+
+        },
+            columns: [[
                 {field:'id',hidden:'true'},
 	            {
 	                title: "上货道编号",
@@ -194,29 +200,36 @@ $(document).ready(function(){
 	});
     // buttonHandle();
 });
+
 function aaa(){
     $('.sbutton').switchbutton({
         checked: false,
         onChange: function(checked){
             if (checked == true){
                 // document.getElementById('authenTypeL').innerHTML = '已加热!';
-                // var hasSelect = $("#myTable").datagrid("getSelections");
+                var hasSelect = $("#myTable").datagrid("getSelections");
                 // var row = $('#myTable').datagrid('getSelected');
-                if (hasSelect.length == 1) {
-                    var row = hasSelect[0];
-                    rowNumber = $("#myTable").datagrid("getRowIndex", row);
-                    heating(rowNumber,"1");
-                }
+                var type="1";
+                $("#myTable").datagrid({onClickRow : function(index, row){
+
+                        if (row!=null) {
+                            rowNumber = $("#myTable").datagrid("getRowIndex", row);
+                            heating(rowNumber,type);
+                        }
+                    }});
                 return;
             }
             if (checked == false){
                 // document.getElementById('authenTypeL').innerHTML = '未加热!';
                 var hasSelect = $("#myTable").datagrid("getSelections");
-                if (hasSelect.length == 1) {
-                    var row = hasSelect[0];
-                    rowNumber = $("#myTable").datagrid("getRowIndex", row);
-                    heating(rowNumber,"2");
-                }
+                var type="2";
+                $("#myTable").datagrid({onClickRow : function(index, row){
+
+                        if (row!=null) {
+                            rowNumber = $("#myTable").datagrid("getRowIndex", row);
+                            heating(rowNumber,type);
+                        }
+                    }});
             }}
     })
 }
