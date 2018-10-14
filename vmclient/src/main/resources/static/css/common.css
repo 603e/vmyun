@@ -129,10 +129,14 @@ li {
     margin-bottom: 70px;
 }
 .danjia,.remarks{
-    width:130px;
+    width:100px;
 }
 .numberTd{
     width:50px;
+}
+
+.number{
+    width:110px;
 }
 
 .shifoujiare{
@@ -271,7 +275,7 @@ table tr th span{
 /*弹框-开始*/
 .mask_box{
     position:fixed;
-    width: 800px;
+    width: 850px;
     height: 300px;
     bottom: 300px;
     z-index: 100;
@@ -282,8 +286,8 @@ table tr th span{
     left: 0;
     right: 0;
     bottom: 0;
-    width: 100%;
-    height: 100%;
+    /*width: 100%;
+    height: 100%;*/
     background: rgba(0,0,0,.5);
     z-index: 100;
 }
@@ -291,7 +295,7 @@ table tr th span{
     position: absolute;
     /*top: 50%;
     left: 50%;*/
-    width: 1200px;
+    width: 850px;
     height: 600px;
     /*margin: -400px 0 0 -200px;*/
     background: #fff;

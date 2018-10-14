@@ -20,11 +20,12 @@
 </style>
 </head>
 <body class="childrenBody" onload="kaishi()">
+<div style="width: 1024px;height: 1280px;">
 <div class="panel_box row" id="goodsImgList">
     <#if (goods?size>0)>
         <#list goods as items>
-            <div class="panel col <#if (!items_has_next)>max_panel</#if> " style="width: 446px" >
-                <a href="#" onclick="goodsSlect('${items.name}','${items.price}','${items.id}','${items.number}')" > <img src="${base}${items.href}" style="width: 400px; height: 330px;"></a>
+            <div class="panel col <#if (!items_has_next)>max_panel</#if> " style="width: 341px" >
+                <a href="#" onclick="goodsSlect('${items.name}','${items.price}','${items.id}','${items.number}')" > <img src="${base}${items.href}" style="width: 300px; height: 280px;"></a>
                 <div class="panel_word newMessage" style="float: none;">
                     <span>${items.name}&nbsp;&nbsp;&nbsp;&nbsp;${items.price}元</span>
                 </div>
@@ -59,11 +60,12 @@
     </div>
 </div>
 <div class="layui-anim" id="dd" data-anim="layui-anim-fadein" style="height: 60px;width: 100%" onclick="gouwuche()"><#--<img src="/static/vmimgs/购物车2.png" style="width: 100px;height: 80px;float: right">-->
-    <button class="layui-btn layui-btn-fluid"  style="height: 70px;width: 100%; background-color: #d9d9d9; font-size: 40px">购物车</button>
+    <button class="layui-btn layui-btn-fluid"  style="height: 70px;width: 1024px; background-color: #d9d9d9; font-size: 40px">购物车</button>
 </div>
 <#--<input id="Button1" type="button" value="开始全屏" onclick="kaishi()" />
 <input id="Button2" type="button" value="关闭全屏" onclick="guanbi()" />-->
 <input type="hidden" id="gouwuche" name="gouwuche" value="" />
+</div>
 <script type="text/javascript" src="${base}/static/layui/layui.js"></script>
 <script>
     layui.use(['layer','jquery','form'],function(){
@@ -91,13 +93,13 @@
         //判断该列表中有无商品数据
         if($("#myTbody tr").length <= 0) {
             var addtr = '<tr class="mytr">';
-            addtr += '<td>' + number + '</td>';//商品编码
+            addtr += '<td class="number">' + number + '</td>';//商品编码
             addtr += '<td>' + name + '</td>';//商品名称
             addtr += '<td class="kbj danjia">' + price + '</td>';//商品价格
             addtr += '<td class="numberTd"><div class="jiajian"><span class="jian" onclick="num_sub(this)">-</span><input type="text" value="1" class="num"><span class="jia" onclick="num_add(this)">+</span></div></td>';
             addtr += '<td class="shifoujiare"><div class="layui-form-item">\n' +
-                    '    <div class="layui-input-block">\n' +
-                    '      <input type="checkbox" name="close" lay-skin="switch" lay-text="常温|加热">\n' +
+                    '    <div class="layui-input-block layui-form-item">\n' +
+                    '      <input type="checkbox" name="like[write]" title="加热" >\n' +
                     '    </div>\n' +
                     '  </div></td>';
             addtr += '<td><button class="delete_btn">删除</button></td>';
@@ -319,6 +321,7 @@
             login()
         }
     };
+
     //prompt层
     //触发事件
     function login() {
@@ -332,7 +335,14 @@
                 ,id: 'LAY_layuipro' //设定一个id，防止重复弹出
                 ,btnAlign: 'c'
                 ,moveType: 1 //拖拽模式，0或者1
-                ,content: '<form class="layui-form" action="${base}/login/main" method="post">    <div class="layui-form-item">        <input class="layui-input" name="username" placeholder="用户名" lay-verify="required" type="text" autocomplete="off">    </div>    <div class="layui-form-item">        <input class="layui-input" name="password" placeholder="密码" lay-verify="required" type="password" autocomplete="off">    </div>    <button class="layui-btn login_btn" lay-submit="" lay-filter="login">登录</button></form><script type="text/javascript" src="${base}/static/layui/layui.js">'
+                ,content: '<form class="layui-form" action="${base}/login/main" method="post">    \n' +
+                '            <div class="layui-form-item">        \n' +
+                '                <input class="layui-input" name="username" placeholder="用户名" lay-verify="required" type="text" autocomplete="off">    \n' +
+                '                </div>    \n' +
+                '                    <div class="layui-form-item">          \n' +
+                '                        <input class="layui-input" name="password" placeholder="密码" lay-verify="required" type="password" autocomplete="off">    </div>\n' +
+                '                            <button class="layui-btn login_btn" lay-submit="" lay-filter="login">登录</button></form>\n' +
+                '        <script type="text/javascript" src="${base}/static/layui/layui.js">'
 
             });
             layui.use(['layer', 'form'], function() {
