@@ -24,7 +24,7 @@
         width:100%!important;
     }
     .table-a td{
-        width:13%!important;
+        width:11%!important;
     }
 </style>
 <BODY style="background: #FFFFFF" onload="aaa()">

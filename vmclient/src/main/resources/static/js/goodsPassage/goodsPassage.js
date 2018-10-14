@@ -4,6 +4,9 @@ $(document).ready(function(){
     queryGoods();
     var base=window.location.host;
     $("#myTable").datagrid({
+        singleSelect: false,
+        fitColumns:false,
+        selectOnCheck:false,
         onClickRow: function (index, row) {
 
         },
@@ -11,6 +14,7 @@ $(document).ready(function(){
 
         },
             columns: [[
+                {field : 'ck',checkbox : true},
                 {field:'id',hidden:'true'},
 	            {
 	                title: "上货道编号",
@@ -76,8 +80,15 @@ $(document).ready(function(){
                         return "<input id=\"sbutton\" class=\"sbutton\" value='"+index+"' onText='开' offText='关'  style=\"width:70px;height:25px\" >";
                     }
                 },
+                // {
+                //     hidden:'true',
+                //     field: "heatFlag",
+                //     formatter:function(value, row, index){
+                //         return "<input id='heatFlag"+index+"' value='false' >";
+                //     }
+                // },
 				{
-					title: "操作",
+					title: "调试",
 					field: "amount",
 					formatter:function(value, row, index){
                         return "<input type='button' name=\"opera\" value='操作' onClick=\"editRow('" + row + "','" + index + "')\" >";
@@ -85,7 +96,6 @@ $(document).ready(function(){
 				}
 	              ]],
 	    rownumbers: true,
-	    singleSelect: true,
 	    rowStyler: function(index, row) {
 	        return 'background-color:#FFFFFF';
 	    },onEndEdit: function(rowIndex, rowData){
@@ -105,6 +115,7 @@ $(document).ready(function(){
 	                });
 	                $("#myTable").datagrid("beginEdit", rowNumber);
                     rowNumber+1;
+                    aaa();
 	            }
 	         },
 	        {
@@ -158,43 +169,52 @@ $(document).ready(function(){
                         type:"POST",
 						data:data,
                         url :'http://'+base+'/admin/goods/addGoodsPassage',
+                        beforeSend: ajaxLoading,
                         success:function(resultMsg){
+                            ajaxLoadEnd();
+                            aaa();
                         	if(resultMsg.retCode){
-                                $("#myTable").datagrid('reload');
                                 $.messager.alert('提示信息','保存成功');
-                                $("#myTable").datagrid('reload');
 							}else{
-                                $("#myTable").datagrid('reload');
                                 $.messager.alert('提示信息','保存失败');
-
 							}
+                        },error:function(res) {
+                            ajaxLoadEnd();
+                            $.messager.alert('提示信息','出货失败');
                         }
                     });
                 }
             },
             {
                 id:"operation",
-                text: '全部操作',
+                text: '全部调试',
                 iconCls: 'icon-save',
                 handler: function () {
-                    var rows = $("#myTable").datagrid("getRows");
-                    var data={};
-                    rows=JSON.stringify(rows);
-                    data.rows=rows;
-                    $.ajax({
-                        type:"POST",
-                        data:data,
-                        url :'http://'+base+'/admin/goods/serialOperation',
-                        success:function(result){
-                            if(result.retCode=="000000"){
-                                $.messager.alert('提示信息','出货成功');
-                            }else{
+                    var rows = $("#myTable").datagrid("getChecked");
+                    if(rows!=null && rows.length!=0){
+                        var data={};
+                        rows=JSON.stringify(rows);
+                        data.rows=rows;
+                        $.ajax({
+                            type:"POST",
+                            data:data,
+                            url :'http://'+base+'/admin/goods/serialOperation',
+                            beforeSend: ajaxLoading,
+                            success:function(result){
+                                ajaxLoadEnd();
+                                if(result.retCode=="000000"){
+                                    $.messager.alert('提示信息','出货成功');
+                                }else{
+                                    $.messager.alert('提示信息','出货失败');
+                                }
+                            },error:function(res) {
+                                ajaxLoadEnd();
                                 $.messager.alert('提示信息','出货失败');
-
                             }
-                        }
-                    });
-
+                        });
+                    }else{
+                        $.messager.alert('提示信息','请选择数据');
+                    }
                 }
             }]
 	});
@@ -206,44 +226,24 @@ function aaa(){
         checked: false,
         onChange: function(checked){
             if (checked == true){
-                // document.getElementById('authenTypeL').innerHTML = '已加热!';
-                var hasSelect = $("#myTable").datagrid("getSelections");
-                // var row = $('#myTable').datagrid('getSelected');
-                var type="1";
                 $("#myTable").datagrid({onClickRow : function(index, row){
-
                         if (row!=null) {
                             rowNumber = $("#myTable").datagrid("getRowIndex", row);
-                            heating(rowNumber,type);
+                            row.heatFlag="true";
                         }
                     }});
                 return;
             }
             if (checked == false){
-                // document.getElementById('authenTypeL').innerHTML = '未加热!';
-                var hasSelect = $("#myTable").datagrid("getSelections");
-                var type="2";
                 $("#myTable").datagrid({onClickRow : function(index, row){
-
                         if (row!=null) {
                             rowNumber = $("#myTable").datagrid("getRowIndex", row);
-                            heating(rowNumber,type);
+                            row.heatFlag="false";
                         }
                     }});
             }}
     })
 }
-// function buttonHandle() {
-//     var  user=$("#user").val();
-//     if(user=="admin"){
-//         $('#operation').show();
-//         $('#myTable').datagrid('showColumn', 'amount');
-//     }else if(user=="tester"){
-//         $('#operation').hide();
-//         $('#myTable').datagrid('hideColumn', 'amount');
-//     }
-//     // $('#myTable').datagrid('showColumn', 'amount');
-// }
 function queryGoods() {
     var base=window.location.host;
     $.ajax({
@@ -275,10 +275,15 @@ function load(){
         }
     });
 }
-
+function ajaxLoading(){
+    $("<div class=\"datagrid-mask\"></div>").css({display:"block",width:"100%",height:$(window).height()}).appendTo("body");
+    $("<div class=\"datagrid-mask-msg\"></div>").html("正在处理，请稍候。。。").appendTo("body").css({display:"block",left:($(document.body).outerWidth(true) - 190) / 2,top:($(window).height() - 45) / 2});
+}
+function ajaxLoadEnd(){
+    $(".datagrid-mask").remove();
+    $(".datagrid-mask-msg").remove();
+}
 function editRow(row,index) {
-    var row = $('#myTable').datagrid('getSelected');
-    debugger;
     var base=window.location.host;
     var rows = $('#myTable').datagrid('getData').rows[index];
     var data={};
@@ -288,34 +293,17 @@ function editRow(row,index) {
         type:"POST",
         url :'http://'+base+'/admin/goods/serialOperation',
         data:data,
+        beforeSend: ajaxLoading,
         success:function(result){
+            ajaxLoadEnd();
             if(result.retCode=="000000"){
                 $.messager.alert('提示信息','出货成功');
             }else{
                 $.messager.alert('提示信息','出货失败');
 
-            }
-        }
-    });
-}
-function heating(index,type) {
-    var base=window.location.host;
-    var rows = $('#myTable').datagrid('getData').rows[index];
-    var data={};
-    rows=JSON.stringify(rows);
-    data.rows=rows;
-    data.type=type;//加热
-    $.ajax({
-        type:"POST",
-        url :'http://'+base+'/admin/goods/serialOperation',
-        data:data,
-        success:function(result){
-            if(result.retCode=="000000"){
-                $.messager.alert('提示信息','已开始加热');
-            }else{
-                $.messager.alert('提示信息','失败');
-
-            }
+            }},error:function(res) {
+                ajaxLoadEnd();
+                $.messager.alert('提示信息','出货失败');
         }
     });
 }

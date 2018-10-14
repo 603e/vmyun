@@ -124,13 +124,13 @@ public class GoodsPassageController extends BaseController {
         JSONObject josnObject=(JSONObject)JSONObject.toJSON(reqMap);
         List<GoodsPassage>  list=new ArrayList<>();
         boolean isToArray=isJsonArray((String) josnObject.get("rows"));
-        String type=(String) josnObject.get("type");
         GoodsPassage goodsPassage=null;
         if(isToArray){
             JSONArray jsonArray=JSONArray.parseArray((String) josnObject.get("rows"));
             for (int i=0;i<jsonArray.size();i++){
                 JSONObject goodsPassageJson=(JSONObject)jsonArray.get(i);
                 goodsPassage  =GoodsPassageServiceImpl.setValue(goodsPassageJson);
+                goodsPassage.setHeatFlag(Boolean.valueOf(goodsPassageJson.getString("heatFlag")));
                 goodsPassage.setVmId((String)goodsPassageJson.get("vmId"));
                 list.add(goodsPassage);
             }
@@ -138,11 +138,7 @@ public class GoodsPassageController extends BaseController {
             String  a=(String)josnObject.get("rows");
             JSONObject jsonStr = JSONObject.parseObject(a);
             goodsPassage  =GoodsPassageServiceImpl.setValue(jsonStr);
-            if(type!=null&&type.equals("1")){
-                goodsPassage.setHeatFlag(true);
-            }else if(type!=null&&type.equals("2")){
-                goodsPassage.setHeatFlag(false);
-            }
+            goodsPassage.setHeatFlag(Boolean.valueOf(jsonStr.getString("heatFlag")));
             goodsPassage.setVmId((String)josnObject.get("vmId"));
             list.add(goodsPassage);
         }
