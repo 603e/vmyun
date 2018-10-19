@@ -13,10 +13,72 @@
     <link rel="stylesheet" href="//at.alicdn.com/t/font_tnyc012u2rlwstt9.css" media="all" />
     <link rel="stylesheet" href="${base}/static/css/main.css" media="all" />
     <link rel="stylesheet" href="${base}/static/css/common.css" media="all" />
+    <!-- 引入 jQuery Mobile 样式 -->
+    <#--<link rel="stylesheet" href="http://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.css">-->
     <script type="text/javascript" src="${base}/static/js/jquery.min.js"></script>
+    <!-- 引入 jQuery Mobile 库 -->
+    <#--<script src="http://apps.bdimg.com/libs/jquerymobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>-->
     <script type="text/javascript" src="${base}/static/easyui/jquery-submit.js"></script>
     <script type="text/javascript" src="${base}/static/easyui/jquery.json-2.3.js"></script>
 <style type="text/css">
+    .Switch {
+        width: 80px;
+        height: 28px;
+        display: inline-block;
+    }
+    .Switch li {
+        /*	clear: both;
+            line-height: 44px;
+            border-bottom: 1px solid #CCC;*/
+        list-style: none;
+    }
+    .Switch input {
+        display: none
+    }
+    .Switch label {
+        width: 80px;
+        background: #CCC;
+        height: 28px;
+        border-radius: 14px;
+        float: right;
+        box-shadow: 0 1px 2px rgba(0,0,0,.1) inset;
+    }
+    .Switch label em {
+        width: 26px;
+        height: 26px;
+        float: left;
+        margin: 1px;
+        border-radius: 13px;
+        box-shadow: 2px 3px 8px rgba(0,0,0,.1);
+        background: #FFF;
+        cursor: pointer;
+    }
+    .Switch input:checked + label {
+        background: #a4d714;
+    }
+    .Switch input:checked + label em {
+        float: right;
+    }
+    .Switch input:disabled + label {
+        opacity: 0.5
+    }
+    .open{
+        display: none;
+    }
+    .open,.close{
+        color:#fff;
+        width: calc(100% - 30px);
+        text-align: center;
+        height: 28px;
+        line-height: 28px;
+        font-size:14px;
+    }
+    .Switch input:checked + label > .open{
+        display: inline-block;
+    }
+    .Switch input:checked + label > .close{
+        display: none;
+    }
 </style>
 </head>
 <body class="childrenBody" onload="kaishi()">
@@ -38,21 +100,23 @@
     <div class="mask"></div>
     <div class="box">
         <div class="box_top">结算</div>
-        <table class="layui-table layui-form">
-            <thead>
-            <tr>
-                <th lay-data="{field:'number'}">商品编码</th>
-                <th lay-data="{field:'name'}">商品名称</th>
-                <th lay-data="{field:'price', edit: 'text'}">零售价（元）</th>
-                <th lay-data="{field:'qty', edit: 'text'}">数量</th>
-                <th lay-data="{field:'heatFlag'}">是否加热</th>
-                <th>操作</th>
-            </tr>
-            </thead>
-            <tbody id="myTbody">
+        <form class="layui-form">
+            <table class="layui-table">
+                <thead>
+                <tr>
+                    <th lay-data="{field:'number'}">商品编码</th>
+                    <th lay-data="{field:'name'}">商品名称</th>
+                    <th lay-data="{field:'price', edit: 'text'}">零售价（元）</th>
+                    <th lay-data="{field:'qty', edit: 'text'}">数量</th>
+                    <th lay-data="{field:'heatFlag'}">是否加热</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="myTbody">
 
-            </tbody>
-        </table>
+                </tbody>
+            </table>
+        </form>
         <div class="bot">
             <input type="submit" value="结算">
             <input type="text" onclick="cancel()" value="取消">
@@ -76,7 +140,27 @@
         $(".panel a").on("click",function(){
             //window.parent.goodsSlect($(this.name),$(this.price),$(this.id),$(this.number));
         });
+
+        //监听指定开关
+        form.on('switch(switchTest)', function(data){
+
+            layer.msg( (this.checked ? '打开' : '关闭'), {
+                offset: '400px'
+            });
+            if(this.checked){
+                $(this).val("1");
+            }else{
+                $(this).val("0");
+            }
+
+            //开关状态判断，是否添加或更新数据
+            switchStatus($(this));
+        });
     });
+
+    function  switchStatus(heatFlag){
+        alert(123);
+    };
 
     $(document).ready(function(){
         $(".mask_box").hide();
@@ -90,19 +174,22 @@
     //添加购物车
     function goodsSlect(name,price,id,number){
         var flag = false;
+        var tableLength = $("#myTbody tr").length;
         //判断该列表中有无商品数据
-        if($("#myTbody tr").length <= 0) {
+        if(tableLength <= 0) {
             var addtr = '<tr class="mytr">';
             addtr += '<td class="number">' + number + '</td>';//商品编码
             addtr += '<td>' + name + '</td>';//商品名称
             addtr += '<td class="kbj danjia">' + price + '</td>';//商品价格
             addtr += '<td class="numberTd"><div class="jiajian"><span class="jian" onclick="num_sub(this)">-</span><input type="text" value="1" class="num"><span class="jia" onclick="num_add(this)">+</span></div></td>';
-            addtr += '<td class="shifoujiare"><div class="layui-form-item">\n' +
-                    '    <div class="layui-input-block layui-form-item">\n' +
-                    '      <input type="checkbox" name="like[write]" title="加热" >\n' +
-                    '    </div>\n' +
-                    '  </div></td>';
-            addtr += '<td><button class="delete_btn">删除</button></td>';
+            addtr += '<td class="heatFlag">' +
+                        '<div class="Switch">\n' +
+                        '   <input type="checkbox" name="Storage2" id="blance'+tableLength+'"/>\n' +
+                        '   <label for="blance'+tableLength+'"><span class="open">加热</span><span class="close">常温</span><em></em></label>\n' +
+                        '</div>' +
+                    ' </td>';
+            addtr += '<td><a class="layui-btn layui-btn-xs layui-btn-danger delete_btn" lay-event="del">' +
+                    '<i class="layui-icon layui-icon-delete"></i>删除</a></td>';
             addtr += '</tr>';
             $("#myTbody").append(addtr);
             return;
@@ -130,12 +217,14 @@
             addtr += '<td>' + name + '</td>';//商品名称
             addtr += '<td class="kbj danjia">' + price + '</td>';//商品价格
             addtr += '<td class="numberTd"><div class="jiajian"><span class="jian" onclick="num_sub(this)">-</span><input type="text" value="1" class="num"><span class="jia" onclick="num_add(this)">+</span></div></td>';
-            addtr += '<td class="shifoujiare"><div class="layui-form-item">\n' +
-                    '    <div class="layui-input-block">\n' +
-                    '      <input type="checkbox" name="close" lay-skin="switch" lay-text="常温|加热">\n' +
-                    '    </div>\n' +
-                    '  </div></td>';
-            addtr += '<td><button class="delete_btn">删除</button></td>';
+            addtr += '<td class="heatFlag">' +
+                    '<div class="Switch">\n' +
+                    '   <input type="checkbox" name="Storage2" id="blance'+tableLength+'" checked />\n' +
+                    '   <label for="blance'+tableLength+'"><span class="open">加热</span><span class="close">常温</span><em></em></label>\n' +
+                    '</div>' +
+                    ' </td>';
+            addtr += '<td><a class="layui-btn layui-btn-xs layui-btn-danger delete_btn" lay-event="del">' +
+                    '<i class="layui-icon layui-icon-delete"></i>删除</a></td>';
             addtr += '</tr>';
             $("#myTbody").append(addtr);
             return;
